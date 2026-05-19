@@ -16,9 +16,10 @@ for dir in "${dirs[@]}"; do
     fi
 done
 
-# Create logs, configs and scripts files
+# Define files variable
 files=("logs/system.log" "configs/app.conf" "scripts/backup.sh")
 
+# Create logs, configs and scripts files
 for file in "${files[@]}"; do
     if [ -f "$parent_dir/$file" ]; then
        echo "File already exists: $file."
