@@ -35,15 +35,14 @@ echo "[2/4] Creating security group: $SG_NAME..."
 SG_OUTPUT=$(aws ec2 create-security-group \
   --group-name "$SG_NAME" \
   --description "$SG_DESCRIPTION" \
-   --vpc-id "$VPC_ID" \
+  --vpc-id "$VPC_ID" \
   --tag-specifications "ResourceType=security-group,Tags=[{Key=Project,Value=AutomationLab}]" \
-  --query "GroupdId" \
-  --output text 2>&1)
+  --output json 2>&1)
 
 EXIT_CODE=$?
 
-if [ $EXIT_CODE -eq 0 ]; then
-  SG_ID="$SG_OUTPUT"
+if [ "$EXIT_CODE" -eq 0 ]; then
+  SG_ID=$(echo "$SG_OUTPUT" | grep -o '"GroupId": *"[^"]*"' | grep -o 'sg-[^"]*')
   echo "✅ Security group created with ID: $SG_ID"
 
 elif echo "$SG_OUTPUT" | grep -q "InvalidGroup.Duplicate"; then
